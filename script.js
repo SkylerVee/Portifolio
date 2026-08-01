@@ -8,9 +8,11 @@ const roles = [
 let roleIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
-const typingElement = document.getElementById("typing-element");
 
 function typeEffect() {
+  const typingElement = document.getElementById("typing-element");
+  if (!typingElement) return;
+
   const currentRole = roles[roleIndex];
   
   if (isDeleting) {
@@ -34,29 +36,6 @@ function typeEffect() {
 
   setTimeout(typeEffect, typeSpeed);
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  typeEffect();
-  initConstellationBg();
-});
-
-const observerOptions = {
-  root: null,
-  rootMargin: '0px',
-  threshold: 0.15
-};
-
-const observer = new IntersectionObserver((entries, observer) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('active');
-    }
-  });
-}, observerOptions);
-
-document.querySelectorAll('.reveal').forEach(element => {
-  observer.observe(element);
-});
 
 function initConstellationBg() {
   const canvas = document.getElementById('bg-canvas');
@@ -132,26 +111,51 @@ function initConstellationBg() {
   animate();
 }
 
-const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-const navLinks = document.querySelector('.nav-links');
+document.addEventListener("DOMContentLoaded", () => {
+  typeEffect();
+  initConstellationBg();
 
-mobileMenuBtn.addEventListener('click', () => {
-  navLinks.classList.toggle('active');
-  
-  // Optional: Toggle icon between bars and X
-  const icon = mobileMenuBtn.querySelector('i');
-  icon.classList.toggle('fa-bars');
-  icon.classList.toggle('fa-xmark');
-});
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.15
+  };
 
-// Close menu when clicking any link
-document.querySelectorAll('.nav-links a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('active');
-    const icon = mobileMenuBtn.querySelector('i');
-    if (icon) {
-      icon.classList.add('fa-bars');
-      icon.classList.remove('fa-xmark');
-    }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.reveal').forEach(element => {
+    observer.observe(element);
   });
+
+  const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+  const navLinks = document.querySelector('.nav-links');
+
+  if (mobileMenuBtn && navLinks) {
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      
+      const icon = mobileMenuBtn.querySelector('i');
+      if (icon) {
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-xmark');
+      }
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        const icon = mobileMenuBtn.querySelector('i');
+        if (icon) {
+          icon.classList.add('fa-bars');
+          icon.classList.remove('fa-xmark');
+        }
+      });
+    });
+  }
 });
