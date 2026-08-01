@@ -131,3 +131,27 @@ function initConstellationBg() {
 
   animate();
 }
+
+const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+const navLinks = document.querySelector('.nav-links');
+
+mobileMenuBtn.addEventListener('click', () => {
+  navLinks.classList.toggle('active');
+  
+  // Optional: Toggle icon between bars and X
+  const icon = mobileMenuBtn.querySelector('i');
+  icon.classList.toggle('fa-bars');
+  icon.classList.toggle('fa-xmark');
+});
+
+// Close menu when clicking any link
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('active');
+    const icon = mobileMenuBtn.querySelector('i');
+    if (icon) {
+      icon.classList.add('fa-bars');
+      icon.classList.remove('fa-xmark');
+    }
+  });
+});
